@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/app_cover_transparent"
+        android:layout_marginTop="@dimen/add_item_top_margin"
+        android:id="@+id/login_cover"/>
+
+    <TextView
+        android:layout_below="@id/login_cover"
+        android:id="@+id/login_lbl_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/username"
+        android:layout_marginLeft="@dimen/add_item_padding_sides"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/login_txt_username"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/add_item_padding_sides"
+        android:layout_marginRight="@dimen/add_item_padding_sides"
+        android:layout_below="@+id/login_lbl_username"
+        android:layout_marginTop="@dimen/add_item_top_margin_between_lbl_txt"
+        />
+    <TextView
+        android:id="@+id/login_lbl_password"
+        android:layout_width="match_parent"
+        android:text="@string/password"
+        android:layout_marginTop="@dimen/add_item_top_margin"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/add_item_padding_sides"
+        android:layout_below="@+id/login_txt_username"
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/login_txt_password"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/add_item_padding_sides"
+        android:layout_marginRight="@dimen/add_item_padding_sides"
+        android:inputType="textPassword"
+        android:layout_below="@+id/login_lbl_password"
+        android:layout_marginTop="@dimen/add_item_top_margin_between_lbl_txt"
+        />
+    <Button
+        android:id="@+id/login_btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/login"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:background="@color/colorPrimary"
+        android:layout_below="@+id/login_txt_password"
+        android:layout_marginTop="@dimen/add_item_top_margin"
+        android:layout_marginRight="@dimen/add_item_padding_sides"
+        android:layout_marginLeft="@dimen/add_item_padding_sides"
+        />
+
+</RelativeLayout>

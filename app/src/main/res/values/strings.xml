@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">CMS</string>
+    <string name="add_category">New Category</string>
+    <string name="category">Categories</string>
+    <string name="category_name">Category Name</string>
+    <string name="add_item">Add Item</string>
+    <string name="add">Add</string>
+    <string name="retail_price">Retail Price:</string>
+    <string name="original_price">Original Price:</string>
+    <string name="cancel">Cancel</string>
+    <string name="search">Search</string>
+    <string name="save">Save</string>
+    <string name="username">Username:</string>
+    <string name="password">Password:</string>
+    <string name="login">Login</string>
+    <string name="add_item_img_msg">Tap here to upload image</string>
+    <string name="tag_date">on <b>22-02-1992</b></string>
+    <string name="tag_category">in <b>Clothes</b></string>
+    <string-array name="dates_array">
+        <item>22-02-1992</item>
+        <item>16-03-3292</item>
+        <item>02-06-2005</item>
+    </string-array>
+    <string-array name="category_array">
+        <item>Long Clothes</item>
+        <item>Jeans</item>
+        <item>Coats</item>
+    </string-array>
+
+</resources>
