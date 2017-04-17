@@ -51,7 +51,7 @@ public class CategoriesAdapter  extends RecyclerView.Adapter<CategoriesAdapter.V
 
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // this item will be deleted.
-                        Toast.makeText(ac,"Item "+categories.get(itemPosition).getName(),Toast.LENGTH_SHORT);
+//                        Toast.makeText(ac,"Item "+categories.get(itemPosition).getName(),Toast.LENGTH_SHORT);
                     }})
                 .setNegativeButton(android.R.string.no, null).show();
     }
@@ -60,7 +60,7 @@ public class CategoriesAdapter  extends RecyclerView.Adapter<CategoriesAdapter.V
     public void onBindViewHolder(ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.itemName.setText(categories.get(position).getName());
+//        holder.itemName.setText(categories.get(position).getName());
         holder.closeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

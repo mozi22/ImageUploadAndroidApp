@@ -6,14 +6,14 @@ package com.main.junaidstore.models;
 
 public class Categories {
 
-    private String name;
     private int id;
+    private String category;
+    private String updated_at;
+    private String created_at;
 
-    public Categories(String name,int id){
-        this.name = name;
-        this.id = id;
-    }
 
-    public String getName(){ return this.name; }
+    public String getCategory(){ return this.category; }
+    public String getUpdatedAt(){ return this.updated_at; }
+    public String getCreatedAt(){ return this.created_at; }
     public int getID(){ return this.id; }
 }

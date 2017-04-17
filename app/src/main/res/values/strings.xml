@@ -16,6 +16,11 @@
     <string name="add_item_img_msg">Tap here to upload image</string>
     <string name="tag_date">on <b>22-02-1992</b></string>
     <string name="tag_category">in <b>Clothes</b></string>
+    <string name="userid">userid</string>
+    <string name="usertype">usertype</string>
+    <string name="access_token">access_token</string>
+
+
     <string-array name="dates_array">
         <item>22-02-1992</item>
         <item>16-03-3292</item>

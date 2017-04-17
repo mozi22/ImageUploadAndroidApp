@@ -17,28 +17,28 @@ public interface INetworkInterface {
 
     @POST("_category/insert_category")
     Call<Categories> InsertCategory(@Query("category") String category,
-                                    @Query("userid") int userid,
+                                    @Query("userid") String userid,
                                     @Query("access_token") String access_token);
 
     @POST("_category/delete_category")
-    Call<Categories> DeleteCategory(@Query("categoryid") int categoryid,
-                                    @Query("userid") int userid,
+    Call<Categories> DeleteCategory(@Query("categoryid") String categoryid,
+                                    @Query("userid") String userid,
                                     @Query("access_token") String access_token);
 
     @GET("_category/get_categories")
-    Call<Categories> getCategories(@Query("userid") int userid,
+    Call<Categories> getCategories(@Query("userid") String userid,
                                    @Query("access_token") String access_token);
 
     @POST("_post/insert_post")
     Call<Posts> insertPost(@Query("image") String image,
-                           @Query("retail_price") double retail_price,
-                           @Query("original_price") double original_price,
-                           @Query("userid") int userid,
+                           @Query("retail_price") String retail_price,
+                           @Query("original_price") String original_price,
+                           @Query("userid") String userid,
                            @Query("access_token") String access_token,
-                           @Query("categoryid") int categoryid
+                           @Query("categoryid") String categoryid
                            );
 
     @POST("_user/login")
-    Call<Users> insertPost(@Query("username") String username,
+    Call<Users> login(@Query("username") String username,
                            @Query("password") String password);
 }
