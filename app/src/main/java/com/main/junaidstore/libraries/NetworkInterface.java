@@ -27,14 +27,15 @@ public class NetworkInterface {
         activity = ac;
     }
     public void getCategories(String userid,String access_token,final int callbackCode){
-        Call<Categories> call = networkInterface.getCategories(userid,access_token);
-        call.enqueue(new Callback<Categories>() {
+        Call<com.main.junaidstore.models.Response> call = networkInterface.getCategories(userid,access_token);
+        call.enqueue(new Callback<com.main.junaidstore.models.Response>() {
+
             @Override
-            public void onResponse(Call<Categories> call, Response<Categories> response) {
+            public void onResponse(Call<com.main.junaidstore.models.Response> call, Response<com.main.junaidstore.models.Response> response) {
                 int code = response.code();
 
-                if(code == 201){
-                    Categories req = response.body();
+                if(code == 200){
+                    com.main.junaidstore.models.Response req = response.body();
                     ((com.main.junaidstore.activities.Categories)NetworkInterface.this.activity).AsyncCallback(callbackCode, Parcels.wrap(req));
                 }
                 else{
@@ -43,20 +44,66 @@ public class NetworkInterface {
             }
 
             @Override
-            public void onFailure(Call<Categories> call, Throwable t) {
+            public void onFailure(Call<com.main.junaidstore.models.Response> call, Throwable t) {
+
+            }
+        });
+    }
+    public void insertCategory(String userid,String access_token,String category,final int callbackCode){
+        Call<com.main.junaidstore.models.Response> call = networkInterface.insertCategory(category,userid,access_token);
+        call.enqueue(new Callback<com.main.junaidstore.models.Response>() {
+
+            @Override
+            public void onResponse(Call<com.main.junaidstore.models.Response> call, Response<com.main.junaidstore.models.Response> response) {
+                int code = response.code();
+
+                if(code == 200){
+                    com.main.junaidstore.models.Response req = response.body();
+                    ((com.main.junaidstore.activities.Categories)NetworkInterface.this.activity).AsyncCallback(callbackCode, Parcels.wrap(req));
+                }
+                else{
+                    Toast.makeText(activity,"Something went wrong, please try later.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<com.main.junaidstore.models.Response> call, Throwable t) {
+
+            }
+        });
+    }
+    public void deleteCategory(String userid,String access_token,String categoryid,final int callbackCode){
+        Call<com.main.junaidstore.models.Response> call = networkInterface.deleteCategory(categoryid,userid,access_token);
+        call.enqueue(new Callback<com.main.junaidstore.models.Response>() {
+
+            @Override
+            public void onResponse(Call<com.main.junaidstore.models.Response> call, Response<com.main.junaidstore.models.Response> response) {
+                int code = response.code();
+
+                if(code == 200){
+                    com.main.junaidstore.models.Response req = response.body();
+                    ((com.main.junaidstore.activities.Categories)NetworkInterface.this.activity).AsyncCallback(callbackCode, Parcels.wrap(req));
+                }
+                else{
+                    Toast.makeText(activity,"Something went wrong, please try later.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<com.main.junaidstore.models.Response> call, Throwable t) {
 
             }
         });
     }
     public void login(String username,String password,final int callbackCode){
-        Call<Users> call = networkInterface.login(username,password);
-        call.enqueue(new Callback<Users>() {
+        Call<com.main.junaidstore.models.Response> call = networkInterface.login(username,password);
+        call.enqueue(new Callback<com.main.junaidstore.models.Response>() {
             @Override
-            public void onResponse(Call<Users> call, Response<Users> response) {
+            public void onResponse(Call<com.main.junaidstore.models.Response> call, Response<com.main.junaidstore.models.Response> response) {
                 int code = response.code();
 
                 if(code == 200){
-                    Users req = response.body();
+                    com.main.junaidstore.models.Response req = response.body();
                     ((com.main.junaidstore.activities.login)NetworkInterface.this.activity).AsyncCallback(callbackCode, Parcels.wrap(req));
                 }
                 else{
@@ -65,7 +112,7 @@ public class NetworkInterface {
             }
 
             @Override
-            public void onFailure(Call<Users> call, Throwable t) {
+            public void onFailure(Call<com.main.junaidstore.models.Response> call, Throwable t) {
 
             }
         });

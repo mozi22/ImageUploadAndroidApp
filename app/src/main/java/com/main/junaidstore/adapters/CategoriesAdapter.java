@@ -12,9 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.main.junaidstore.R;
+import com.main.junaidstore.libraries.GeneralFunctions;
+import com.main.junaidstore.libraries.NetworkInterface;
 import com.main.junaidstore.models.Categories;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Muazzam on 4/15/2017.
@@ -22,13 +25,22 @@ import java.util.ArrayList;
 
 public class CategoriesAdapter  extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder>  {
 
-    ArrayList<Categories> categories = new ArrayList<>();
+    List<Categories> categories = new ArrayList<>();
     private int focusedItem = 0;
     private Activity ac;
-    public CategoriesAdapter(ArrayList<Categories> categories,Activity ac){
+
+    NetworkInterface networkInterface;
+
+    public CategoriesAdapter(List<Categories> categories,Activity ac){
 
         this.categories = categories;
         this.ac = ac;
+
+        this.networkInterface = new NetworkInterface(ac);
+    }
+
+    public List<Categories> getCategories(){
+        return this.categories;
     }
 
     // Create new views (invoked by the layout manager)
@@ -45,13 +57,16 @@ public class CategoriesAdapter  extends RecyclerView.Adapter<CategoriesAdapter.V
 
         new AlertDialog.Builder(ac)
                 .setTitle("Confirm")
-                .setMessage("Are you sure you want to delete this category ?")
+                .setMessage("All the related posts to this category will be deleted. Are you sure ?")
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        // this item will be deleted.
-//                        Toast.makeText(ac,"Item "+categories.get(itemPosition).getName(),Toast.LENGTH_SHORT);
+                        networkInterface.deleteCategory(
+                                GeneralFunctions.getSessionValue(ac,ac.getResources().getString(R.string.userid)),
+                                GeneralFunctions.getSessionValue(ac,ac.getResources().getString(R.string.access_token)),
+                                categories.get(itemPosition).getID(),
+                                com.main.junaidstore.activities.Categories.CODE_DELETE_CATEGORY);
                     }})
                 .setNegativeButton(android.R.string.no, null).show();
     }
@@ -60,7 +75,7 @@ public class CategoriesAdapter  extends RecyclerView.Adapter<CategoriesAdapter.V
     public void onBindViewHolder(ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-//        holder.itemName.setText(categories.get(position).getName());
+        holder.itemName.setText(categories.get(position).getCategory());
         holder.closeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

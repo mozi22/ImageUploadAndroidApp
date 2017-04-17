@@ -14,12 +14,14 @@ import com.main.junaidstore.R;
 import com.main.junaidstore.adapters.CategoriesAdapter;
 import com.main.junaidstore.fragments.AddCategoryDialog;
 import com.main.junaidstore.interfaces.AsyncCallback;
+import com.main.junaidstore.libraries.GeneralFunctions;
 import com.main.junaidstore.libraries.NetworkInterface;
 import com.main.junaidstore.libraries.SimpleDividerItemDecoration;
 
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,6 +39,8 @@ public class Categories extends AppCompatActivity implements AsyncCallback{
     public static final int CODE_INSERT_CATEGORY = 1;
     public static final int CODE_DELETE_CATEGORY = 2;
     public static final int CODE_GET_CATEGORIES = 3;
+
+    public List<com.main.junaidstore.models.Categories> categoriesList;
 
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -89,58 +93,38 @@ public class Categories extends AppCompatActivity implements AsyncCallback{
     protected void onResume(){
         super.onResume();
 
-        this.networkInterface.getCategories(getResources().getString(R.string.userid),
-                getResources().getString(R.string.access_token),
+        this.networkInterface.getCategories(GeneralFunctions.getSessionValue(this,getResources().getString(R.string.userid)),
+                GeneralFunctions.getSessionValue(this,getResources().getString(R.string.access_token)),
                 CODE_GET_CATEGORIES);
     }
-
-
-
-//    private ArrayList<com.main.junaidstore.models.Categories> dummyData(){
-//        ArrayList<com.main.junaidstore.models.Categories> cat = new ArrayList<>();
-//        cat.add(new com.main.junaidstore.models.Categories("Cat1",1));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat2",2));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat3",3));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat4",4));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat5",5));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat6",6));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat6",6));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat6",6));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat6",6));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat6",6));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat6",6));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat6",6));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat6",6));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat6",6));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat6",6));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat6",6));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat6",6));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat6",6));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat6",6));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat6",6));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat6",6));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat6",6));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat6",6));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat6",6));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat6",6));
-//        cat.add(new com.main.junaidstore.models.Categories("Cat6",6));
-//
-//        return cat;
-//    }
 
     @Override
     public void AsyncCallback(int resultCode, Parcelable rf) {
 
-        if(CODE_INSERT_CATEGORY == resultCode){
+        com.main.junaidstore.models.Response response = Parcels.unwrap(rf);
 
+        if(CODE_INSERT_CATEGORY == resultCode){
+            if(response.getType().equals("200")){
+                categoriesList.add(0,response.getCategories().get(0));
+                mAdapter.notifyDataSetChanged();
+            }
         }
         else if(CODE_DELETE_CATEGORY == resultCode){
+            if(response.getType().equals("200")){
+                for(int i=0;i<categoriesList.size();i++){
 
+                    if(categoriesList.get(i).getID().equals(response.getCategories().get(0).getID())){
+                        categoriesList.remove(i);
+                        break;
+                    }
+                }
+                mAdapter.notifyDataSetChanged();
+            }
         }
         else if(CODE_GET_CATEGORIES == resultCode){
 
-            com.main.junaidstore.models.Categories categories = Parcels.unwrap(rf);
-//            mAdapter = new CategoriesAdapter(dummyData(),this);
+            categoriesList = response.getCategories();
+            mAdapter = new CategoriesAdapter(categoriesList,this);
             mRecyclerView.setAdapter(mAdapter);
         }
     }

@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
  * Created by Muazzam on 4/16/2017.
  */
 
-public class login  extends AppCompatActivity implements AsyncCallback{
+public class login extends AppCompatActivity implements AsyncCallback{
 
     @BindView(R.id.login_btn_login) Button login_btn_login;
     @BindView(R.id.login_txt_password) EditText login_txt_password;
@@ -43,6 +43,9 @@ public class login  extends AppCompatActivity implements AsyncCallback{
         getSupportActionBar().hide();
         this.networkInterface = new NetworkInterface(this);
 
+        if(!GeneralFunctions.getSessionValue(this,getResources().getString(R.string.access_token)).equals("")){
+            startActivity(new Intent(this,MainActivity.class));
+        }
 
         login_btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,16 +74,16 @@ public class login  extends AppCompatActivity implements AsyncCallback{
     @Override
     public void AsyncCallback(int resultCode, Parcelable rf) {
         if(resultCode == CODE_LOGIN_USER){
-            Users user = Parcels.unwrap(rf);
+            com.main.junaidstore.models.Response response = Parcels.unwrap(rf);
 
-            if(user.getResponse().getType() == "404"){
+            if(response.getType().equals("404")){
                 Toast.makeText(getApplicationContext(),"Incorrect Username or Password",Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            GeneralFunctions.addSessionValue(login.this,getResources().getString(R.string.access_token),user.getAccessToken());
-            GeneralFunctions.addSessionValue(login.this,getResources().getString(R.string.usertype),user.getUserType());
-            GeneralFunctions.addSessionValue(login.this,getResources().getString(R.string.userid),user.getUserId());
+            GeneralFunctions.addSessionValue(login.this,getResources().getString(R.string.access_token),response.getUsers().getAccessToken());
+            GeneralFunctions.addSessionValue(login.this,getResources().getString(R.string.usertype),response.getUsers().getUserType());
+            GeneralFunctions.addSessionValue(login.this,getResources().getString(R.string.userid),response.getUsers().getUserId());
 
             startActivity(new Intent(login.this,MainActivity.class));
         }
