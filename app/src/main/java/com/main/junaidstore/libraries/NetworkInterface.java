@@ -3,6 +3,7 @@ package com.main.junaidstore.libraries;
 import android.app.Activity;
 import android.widget.Toast;
 
+import com.main.junaidstore.activities.AddNewItem;
 import com.main.junaidstore.interfaces.INetworkInterface;
 import com.main.junaidstore.models.Categories;
 import com.main.junaidstore.models.Users;
@@ -36,7 +37,13 @@ public class NetworkInterface {
 
                 if(code == 200){
                     com.main.junaidstore.models.Response req = response.body();
-                    ((com.main.junaidstore.activities.Categories)NetworkInterface.this.activity).AsyncCallback(callbackCode, Parcels.wrap(req));
+
+                    if(callbackCode == AddNewItem.CODE_GET_POSTING_PAGE_CATEGORIES){
+                        ((com.main.junaidstore.activities.AddNewItem)NetworkInterface.this.activity).AsyncCallback(callbackCode, Parcels.wrap(req));
+                    }
+                    else{
+                        ((com.main.junaidstore.activities.Categories)NetworkInterface.this.activity).AsyncCallback(callbackCode, Parcels.wrap(req));
+                    }
                 }
                 else{
                     Toast.makeText(activity,"Something went wrong, please try later.", Toast.LENGTH_SHORT).show();
@@ -45,7 +52,6 @@ public class NetworkInterface {
 
             @Override
             public void onFailure(Call<com.main.junaidstore.models.Response> call, Throwable t) {
-
             }
         });
     }
@@ -95,6 +101,31 @@ public class NetworkInterface {
             }
         });
     }
+
+    public void insertPost(String image,String retail_price,String original_price,String userid,String access_token,String catid,final int callbackCode){
+
+        Call<com.main.junaidstore.models.Response> call = networkInterface.insertPost(image,retail_price,original_price,userid,access_token,catid);
+        call.enqueue(new Callback<com.main.junaidstore.models.Response>() {
+            @Override
+            public void onResponse(Call<com.main.junaidstore.models.Response> call, Response<com.main.junaidstore.models.Response> response) {
+                int code = response.code();
+
+                if(code == 200){
+                    com.main.junaidstore.models.Response req = response.body();
+                    ((com.main.junaidstore.activities.AddNewItem)NetworkInterface.this.activity).AsyncCallback(callbackCode, Parcels.wrap(req));
+                }
+                else{
+                    Toast.makeText(activity,"Something went wrong, please try later.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<com.main.junaidstore.models.Response> call, Throwable t) {
+
+            }
+        });
+    }
+
     public void login(String username,String password,final int callbackCode){
         Call<com.main.junaidstore.models.Response> call = networkInterface.login(username,password);
         call.enqueue(new Callback<com.main.junaidstore.models.Response>() {

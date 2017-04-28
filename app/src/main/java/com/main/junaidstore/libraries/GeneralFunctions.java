@@ -25,7 +25,6 @@ public class GeneralFunctions {
     }
 
     public static void addSessionValue(Activity activity,String key,String value){
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(key, value);

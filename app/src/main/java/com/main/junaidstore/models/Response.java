@@ -1,5 +1,6 @@
 package com.main.junaidstore.models;
 
+import com.google.gson.annotations.SerializedName;
 import com.main.junaidstore.ParcelConverter.ParcelCategoriesConverter;
 import com.main.junaidstore.ParcelConverter.ParcelPostsConverter;
 import com.main.junaidstore.ParcelConverter.ParcelUsersConverter;

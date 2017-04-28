@@ -122,7 +122,6 @@ public class Categories extends AppCompatActivity implements AsyncCallback{
             }
         }
         else if(CODE_GET_CATEGORIES == resultCode){
-
             categoriesList = response.getCategories();
             mAdapter = new CategoriesAdapter(categoriesList,this);
             mRecyclerView.setAdapter(mAdapter);
