@@ -1,16 +1,19 @@
 package com.main.junaidstore.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.main.junaidstore.R;
 import com.main.junaidstore.adapters.CategoriesAdapter;
@@ -44,6 +47,9 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
     @BindView(R.id.main_header_category) Spinner main_header_category;
 
 
+    private final String GET_POSTS_ALL_CATEGORIES = "All";
+    private final String GET_POSTS_FIRST_TIME = "firstTime";
+
     public static final int CODE_POST_CATEGORIES = 291;
     public static final int CODE_POST_DATES = 292;
     public static final int CODE_POSTS = 293;
@@ -51,6 +57,9 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
 
     public List<com.main.junaidstore.models.Categories> categoriesList;
     public List<com.main.junaidstore.models.Posts> datesList;
+    public List<com.main.junaidstore.models.Posts> postsList;
+
+    ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,16 +68,60 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
         ButterKnife.bind(this);
 
         networkInterface = new NetworkInterface(this);
+        progress = new ProgressDialog(this);
+        progress.setTitle("Loading");
+        progress.setMessage("loading more records...");
+        progress.show();
+        main_header_date.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-        //main_header_tags.setVisibility(View.GONE);
-        image_grid.setAdapter(new MainGridAdapter(getApplicationContext()));
-        createDrawer();
-        //startActivity(new Intent(MainActivity.this,Categories.class));
+                loadBasedOnNewCategories();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        main_header_category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                loadBasedOnNewCategories();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
     }
+
+    private void loadBasedOnNewCategories(){
+
+        progress.show();
+
+        String categoryid = GET_POSTS_ALL_CATEGORIES;
+        for(int i=0;i<this.categoriesList.size();i++){
+            if(this.categoriesList.get(i).getCategory().equals(main_header_category.getSelectedItem().toString())){
+                categoryid = this.categoriesList.get(i).getID();
+            }
+        }
+
+        MainActivity.this.networkInterface.getPosts(GeneralFunctions.getSessionValue(MainActivity.this,getResources().getString(R.string.userid)),
+                GeneralFunctions.getSessionValue(MainActivity.this,getResources().getString(R.string.access_token)),
+                categoryid,
+                main_header_date.getSelectedItem().toString(),
+                CODE_POSTS);
+    }
+
+
+
     @Override
     protected void onResume(){
         super.onResume();
-
         this.networkInterface.getCategories(GeneralFunctions.getSessionValue(this,getResources().getString(R.string.userid)),
                 GeneralFunctions.getSessionValue(this,getResources().getString(R.string.access_token)),
                 CODE_POST_CATEGORIES);
@@ -76,6 +129,12 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
         this.networkInterface.getPostDates(GeneralFunctions.getSessionValue(this,getResources().getString(R.string.userid)),
                 GeneralFunctions.getSessionValue(this,getResources().getString(R.string.access_token)),
                 CODE_POST_DATES);
+
+        this.networkInterface.getPosts(GeneralFunctions.getSessionValue(this,getResources().getString(R.string.userid)),
+                GeneralFunctions.getSessionValue(this,getResources().getString(R.string.access_token)),
+                GET_POSTS_FIRST_TIME,
+                "",
+                CODE_POSTS);
 
     }
 
@@ -133,6 +192,17 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
             datesList = response.getPosts();
             populateDatesDropdown(datesList);
         }
+        else if(CODE_POSTS == resultCode){
+            this.postsList = response.getPosts();
+
+            if(this.postsList.size() == 0){
+                Toast.makeText(getApplicationContext(),"No Records in this category",Toast.LENGTH_SHORT).show();
+            }
+
+            image_grid.setAdapter(new MainGridAdapter(getApplicationContext(),this.postsList));
+            createDrawer();
+        }
+        progress.dismiss();
 
     }
 
@@ -140,6 +210,7 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
 
         List<String> str = new ArrayList<>();
 
+        str.add("All");
         for(com.main.junaidstore.models.Categories cat: categoriesList){
             str.add(cat.getCategory());
         }

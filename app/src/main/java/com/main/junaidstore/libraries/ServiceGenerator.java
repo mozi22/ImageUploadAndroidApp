@@ -10,6 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ServiceGenerator {
 
     public static final String API_BASE_URL = "http://192.168.137.1/iupload/index.php/";
+    public static final String API_IMAGE_LOAD_URL = "http://192.168.137.1/iupload/uploads/";
 
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 

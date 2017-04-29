@@ -13,7 +13,7 @@
         android:background="@color/md_light_appbar"
         android:id="@+id/main_header_tags"
         android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:paddingBottom="1dp"
         >
         <Spinner
             android:id="@+id/main_header_date"
@@ -40,11 +40,11 @@
         android:id="@+id/main_image_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:columnWidth="90dp"
         android:layout_below="@+id/main_header_tags"
-        android:numColumns="auto_fit"
-        android:verticalSpacing="10dp"
-        android:horizontalSpacing="10dp"
+        android:numColumns="2"
+        android:verticalSpacing="0dp"
+        android:horizontalSpacing="0dp"
+        android:adjustViewBounds="true"
         android:stretchMode="columnWidth"
         android:gravity="center"
         />

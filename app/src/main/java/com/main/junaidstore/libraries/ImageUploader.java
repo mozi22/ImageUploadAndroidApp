@@ -80,7 +80,6 @@ public class ImageUploader extends AsyncTask<String,Void,String>{
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        Toast.makeText(this.activity,"Uploading...",Toast.LENGTH_SHORT).show();
     }
 
     public String getStringImage(Bitmap bmp){

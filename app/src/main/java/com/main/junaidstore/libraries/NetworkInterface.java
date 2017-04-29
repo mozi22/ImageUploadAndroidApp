@@ -6,8 +6,6 @@ import android.widget.Toast;
 import com.main.junaidstore.activities.AddNewItem;
 import com.main.junaidstore.activities.MainActivity;
 import com.main.junaidstore.interfaces.INetworkInterface;
-import com.main.junaidstore.models.Categories;
-import com.main.junaidstore.models.Users;
 
 import org.parceler.Parcels;
 
@@ -117,6 +115,30 @@ public class NetworkInterface {
                 if(code == 200){
                     com.main.junaidstore.models.Response req = response.body();
                     ((com.main.junaidstore.activities.Categories)NetworkInterface.this.activity).AsyncCallback(callbackCode, Parcels.wrap(req));
+                }
+                else{
+                    Toast.makeText(activity,"Something went wrong, please try later.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<com.main.junaidstore.models.Response> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void getPosts(String userid,String access_token,String categoryid,String date,final int callbackCode){
+        Call<com.main.junaidstore.models.Response> call = networkInterface.getPosts(userid,access_token,date,categoryid);
+        call.enqueue(new Callback<com.main.junaidstore.models.Response>() {
+
+            @Override
+            public void onResponse(Call<com.main.junaidstore.models.Response> call, Response<com.main.junaidstore.models.Response> response) {
+                int code = response.code();
+
+                if(code == 200){
+                    com.main.junaidstore.models.Response req = response.body();
+                    ((com.main.junaidstore.activities.MainActivity)NetworkInterface.this.activity).AsyncCallback(callbackCode, Parcels.wrap(req));
                 }
                 else{
                     Toast.makeText(activity,"Something went wrong, please try later.", Toast.LENGTH_SHORT).show();

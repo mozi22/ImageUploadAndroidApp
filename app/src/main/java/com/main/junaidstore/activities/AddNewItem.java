@@ -1,5 +1,6 @@
 package com.main.junaidstore.activities;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -61,6 +62,7 @@ public class AddNewItem extends AppCompatActivity implements AsyncCallback{
 
     private static final int REQUEST_CAMERA = 1;
     private static final int SELECT_FILE = 2;
+    private ProgressDialog progress;
 
     private String picturePath;
 
@@ -81,6 +83,11 @@ public class AddNewItem extends AppCompatActivity implements AsyncCallback{
         add_item_submit_btn.setOnClickListener(clickListener);
         add_item_img_upload_box.setOnClickListener(clickListener);
         add_item_img.setOnClickListener(clickListener);
+
+        progress = new ProgressDialog(this);
+        progress.setTitle("Uploading");
+        progress.setMessage("Uploading in progress...");
+
     }
 
     @Override
@@ -134,6 +141,7 @@ public class AddNewItem extends AppCompatActivity implements AsyncCallback{
                             );
 
                     uploader.execute(picturePath);
+                    progress.show();
                 }
             }
         }
@@ -252,6 +260,7 @@ public class AddNewItem extends AppCompatActivity implements AsyncCallback{
                 add_item_retail_price_txtbox.setText("");
                 add_item_img.setVisibility(View.INVISIBLE);
                 add_item_img_upload_box.setVisibility(View.VISIBLE);
+                progress.dismiss();
             }
         }
         else if(CODE_GET_POSTING_PAGE_CATEGORIES == resultCode){

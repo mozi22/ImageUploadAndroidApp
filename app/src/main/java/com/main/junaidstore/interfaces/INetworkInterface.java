@@ -40,6 +40,13 @@ public interface INetworkInterface {
     Call<com.main.junaidstore.models.Response> getPostDates(@Query("userid") String userid,
                                                              @Query("access_token") String access_token);
 
+    @FormUrlEncoded
+    @POST("_post/get_posts_with_filters")
+    Call<com.main.junaidstore.models.Response> getPosts(@Field("userid") String userid,
+                                                        @Field("access_token") String access_token,
+                                                        @Field("date") String date,
+                                                        @Field("categoryid") String categoryid);
+
     @Multipart
     @POST("_post/insert_post")
     Call<com.main.junaidstore.models.Response> insertPost(@Part MultipartBody.Part file,
