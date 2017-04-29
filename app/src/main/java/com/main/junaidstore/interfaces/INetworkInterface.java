@@ -4,11 +4,15 @@ import com.main.junaidstore.models.Categories;
 import com.main.junaidstore.models.Posts;
 import com.main.junaidstore.models.Users;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 
 /**
@@ -33,14 +37,14 @@ public interface INetworkInterface {
     Call<com.main.junaidstore.models.Response> getCategories(@Query("userid") String userid,
                                    @Query("access_token") String access_token);
 
-    @FormUrlEncoded
+    @Multipart
     @POST("_post/insert_post")
-    Call<com.main.junaidstore.models.Response> insertPost(@Field("image") String image,
-                           @Field("retail_price") String retail_price,
-                           @Field("original_price") String original_price,
-                           @Field("userid") String userid,
-                           @Field("access_token") String access_token,
-                           @Field("categoryid") String categoryid
+    Call<com.main.junaidstore.models.Response> insertPost(@Part MultipartBody.Part file,
+                           @Part("retail_price") RequestBody retail_price,
+                           @Part("original_price") RequestBody original_price,
+                           @Part("userid") RequestBody userid,
+                           @Part("access_token") RequestBody access_token,
+                           @Part("categoryid") RequestBody categoryid
                            );
 
     @FormUrlEncoded

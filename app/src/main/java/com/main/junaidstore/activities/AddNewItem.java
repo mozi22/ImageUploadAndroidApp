@@ -63,6 +63,8 @@ public class AddNewItem extends AppCompatActivity implements AsyncCallback{
     private static final int REQUEST_CAMERA = 1;
     private static final int SELECT_FILE = 2;
 
+    private String picturePath;
+
     public List<com.main.junaidstore.models.Categories> categoriesList;
 
     /** The bitmap shown to the user in imageView */
@@ -132,7 +134,7 @@ public class AddNewItem extends AppCompatActivity implements AsyncCallback{
                             AddNewItem.this
                             );
 
-                    uploader.execute(scaledBitmap);
+                    uploader.execute(picturePath);
                 }
             }
         }
@@ -150,7 +152,7 @@ public class AddNewItem extends AppCompatActivity implements AsyncCallback{
             add_item_img.setVisibility(View.VISIBLE);
             add_item_img_upload_box.setVisibility(View.INVISIBLE);
             Uri selectedImage  = imageReturnedIntent.getData();
-            String picturePath = getPicturePath(selectedImage);
+            picturePath = getPicturePath(selectedImage);
 
             if(requestCode == SELECT_FILE){
 

@@ -10,6 +10,8 @@ import com.main.junaidstore.models.Users;
 
 import org.parceler.Parcels;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -102,7 +104,7 @@ public class NetworkInterface {
         });
     }
 
-    public void insertPost(String image,String retail_price,String original_price,String userid,String access_token,String catid,final int callbackCode){
+    public void insertPost(MultipartBody.Part image, RequestBody retail_price, RequestBody original_price, RequestBody userid, RequestBody access_token, RequestBody catid, final int callbackCode){
 
         Call<com.main.junaidstore.models.Response> call = networkInterface.insertPost(image,retail_price,original_price,userid,access_token,catid);
         call.enqueue(new Callback<com.main.junaidstore.models.Response>() {

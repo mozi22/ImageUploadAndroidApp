@@ -9,13 +9,18 @@ import android.widget.Toast;
 import com.main.junaidstore.activities.AddNewItem;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.HashMap;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 /**
  * Created by Muazzam on 4/22/2017.
  */
 
-public class ImageUploader extends AsyncTask<Bitmap,Void,String>{
+public class ImageUploader extends AsyncTask<String,Void,String>{
 
     private String retail_price;
     private String original_price;
@@ -40,12 +45,31 @@ public class ImageUploader extends AsyncTask<Bitmap,Void,String>{
     }
 
     @Override
-    protected String doInBackground(Bitmap... params) {
-        Bitmap bitmap = params[0];
-        String uploadImage = getStringImage(bitmap);
+    protected String doInBackground(String... params) {
+//        Bitmap bitmap = params[0];
+//        String uploadImage = getStringImage(bitmap);
+        File file = new File(params[0]);
+        MultipartBody.Part requestFile = MultipartBody.Part.createFormData("image",file.getName(),RequestBody.create(MediaType.parse("image/*"), file));
+//        requestFile.createFormData("retail_price",this.retail_price);
+//        requestFile.createFormData("original_price",this.original_price);
+//        requestFile.createFormData("access_token",this.access_token);
+//        requestFile.createFormData("userid",this.userid);
+//        requestFile.createFormData("catid",this.catid);
+        RequestBody retail_price = RequestBody.create(MediaType.parse("multipart/form-data"), this.retail_price);
+        RequestBody original_price = RequestBody.create(MediaType.parse("multipart/form-data"), this.original_price);
+        RequestBody access_token = RequestBody.create(MediaType.parse("multipart/form-data"), this.access_token);
+        RequestBody userid = RequestBody.create(MediaType.parse("multipart/form-data"), this.userid);
+        RequestBody catid = RequestBody.create(MediaType.parse("multipart/form-data"),this.catid);
 
-        this.networkInterface.insertPost(uploadImage,this.retail_price,this.original_price,this.userid,this.access_token, this.catid,AddNewItem.CODE_INSERT_POST);
-        return uploadImage;
+//        MultipartBody.Part body =
+//                MultipartBody.Part.createFormData("uploaded_file", file.getName(), requestFile);
+
+        this.networkInterface.insertPost(requestFile,retail_price,original_price,userid,access_token,catid,AddNewItem.CODE_INSERT_POST);
+
+//        this.networkInterface.insertPost(uploadImage,this.retail_price,this.original_price,this.userid,this.access_token, this.catid,AddNewItem.CODE_INSERT_POST);
+//        return uploadImage;
+
+        return "";
     }
 
     @Override
