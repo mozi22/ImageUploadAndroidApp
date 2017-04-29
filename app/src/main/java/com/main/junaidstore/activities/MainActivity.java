@@ -55,6 +55,9 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
     public static final int CODE_POSTS = 293;
     public NetworkInterface networkInterface;
 
+    public boolean initialDataLoadedCat = false;
+    public boolean initialDataLoadedDates = false;
+
     public List<com.main.junaidstore.models.Categories> categoriesList;
     public List<com.main.junaidstore.models.Posts> datesList;
     public List<com.main.junaidstore.models.Posts> postsList;
@@ -76,7 +79,9 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                loadBasedOnNewCategories();
+                if(initialDataLoadedCat && initialDataLoadedDates){
+                    loadBasedOnNewCategories();
+                }
             }
 
             @Override
@@ -88,7 +93,9 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                loadBasedOnNewCategories();
+                if(initialDataLoadedCat && initialDataLoadedDates){
+                    loadBasedOnNewCategories();
+                }
             }
 
             @Override
@@ -96,6 +103,10 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
 
             }
         });
+
+//        if(GeneralFunctions.getSessionValue(this,getResources().getString(R.string.userid)) == "1"){
+            createDrawer();
+//        }
 
     }
 
@@ -122,6 +133,10 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
     @Override
     protected void onResume(){
         super.onResume();
+
+        initialDataLoadedCat = false;
+        initialDataLoadedDates = false;
+
         this.networkInterface.getCategories(GeneralFunctions.getSessionValue(this,getResources().getString(R.string.userid)),
                 GeneralFunctions.getSessionValue(this,getResources().getString(R.string.access_token)),
                 CODE_POST_CATEGORIES);
@@ -187,10 +202,12 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
         if(CODE_POST_CATEGORIES == resultCode){
             categoriesList = response.getCategories();
             populateCategoriesDropdown(categoriesList);
+            initialDataLoadedCat = true;
         }
         else if(CODE_POST_DATES == resultCode){
             datesList = response.getPosts();
             populateDatesDropdown(datesList);
+            initialDataLoadedDates = true;
         }
         else if(CODE_POSTS == resultCode){
             this.postsList = response.getPosts();
@@ -199,8 +216,7 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
                 Toast.makeText(getApplicationContext(),"No Records in this category",Toast.LENGTH_SHORT).show();
             }
 
-            image_grid.setAdapter(new MainGridAdapter(getApplicationContext(),this.postsList));
-            createDrawer();
+            image_grid.setAdapter(new MainGridAdapter(getApplicationContext(),this.postsList,this));
         }
         progress.dismiss();
 

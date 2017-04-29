@@ -46,28 +46,15 @@ public class ImageUploader extends AsyncTask<String,Void,String>{
 
     @Override
     protected String doInBackground(String... params) {
-//        Bitmap bitmap = params[0];
-//        String uploadImage = getStringImage(bitmap);
         File file = new File(params[0]);
         MultipartBody.Part requestFile = MultipartBody.Part.createFormData("image",file.getName(),RequestBody.create(MediaType.parse("image/*"), file));
-//        requestFile.createFormData("retail_price",this.retail_price);
-//        requestFile.createFormData("original_price",this.original_price);
-//        requestFile.createFormData("access_token",this.access_token);
-//        requestFile.createFormData("userid",this.userid);
-//        requestFile.createFormData("catid",this.catid);
         RequestBody retail_price = RequestBody.create(MediaType.parse("multipart/form-data"), this.retail_price);
         RequestBody original_price = RequestBody.create(MediaType.parse("multipart/form-data"), this.original_price);
         RequestBody access_token = RequestBody.create(MediaType.parse("multipart/form-data"), this.access_token);
         RequestBody userid = RequestBody.create(MediaType.parse("multipart/form-data"), this.userid);
         RequestBody catid = RequestBody.create(MediaType.parse("multipart/form-data"),this.catid);
 
-//        MultipartBody.Part body =
-//                MultipartBody.Part.createFormData("uploaded_file", file.getName(), requestFile);
-
         this.networkInterface.insertPost(requestFile,retail_price,original_price,userid,access_token,catid,AddNewItem.CODE_INSERT_POST);
-
-//        this.networkInterface.insertPost(uploadImage,this.retail_price,this.original_price,this.userid,this.access_token, this.catid,AddNewItem.CODE_INSERT_POST);
-//        return uploadImage;
 
         return "";
     }

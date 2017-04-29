@@ -1,6 +1,8 @@
 package com.main.junaidstore.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,6 +13,7 @@ import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -34,9 +37,13 @@ import com.main.junaidstore.models.Categories;
 import org.parceler.Parcels;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -93,6 +100,7 @@ public class AddNewItem extends AppCompatActivity implements AsyncCallback{
     @Override
     protected void onResume(){
         super.onResume();
+        add_item_submit_btn.setEnabled(true);
 
         this.networkInterface.getCategories(GeneralFunctions.getSessionValue(this,getResources().getString(R.string.userid)),
                 GeneralFunctions.getSessionValue(this,getResources().getString(R.string.access_token)),
@@ -174,18 +182,6 @@ public class AddNewItem extends AppCompatActivity implements AsyncCallback{
                     matrix.setRectToRect(new RectF(0, 0, loadedBitmap.getWidth(), loadedBitmap.getHeight()), new RectF(0, 0, 300, 400), Matrix.ScaleToFit.CENTER);
                     scaledBitmap = Bitmap.createBitmap(loadedBitmap, 0, 0, loadedBitmap.getWidth(), loadedBitmap.getHeight(), matrix, true);
                 }
-
-                File file = new File(getExternalCacheDir(), "image.jpg");
-                try {
-                    FileOutputStream out = new FileOutputStream(file);
-                    scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-                    out.flush();
-                    out.close();
-                } catch (Exception e) {
-                    Log.e("Image", "Convert");
-                }
-
-
             }
         else{
 
@@ -210,14 +206,40 @@ public class AddNewItem extends AppCompatActivity implements AsyncCallback{
                     Matrix matrix = new Matrix();
                     matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
                     scaledBitmap = Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
+
                 }
                 catch (IOException e){
 
                 }
             }
+        saveToInternalStorage(scaledBitmap);
         add_item_img.setImageBitmap(scaledBitmap);
     }
 
+    private String saveToInternalStorage(Bitmap bitmapImage){
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        // path to /data/data/yourapp/app_data/imageDir
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        // Create imageDir
+        File mypath=new File(directory,"image.jpg");
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(mypath);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            picturePath = mypath.getPath();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return directory.getAbsolutePath();
+    }
     public String getPicturePath(Uri selectedImage){
         String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
