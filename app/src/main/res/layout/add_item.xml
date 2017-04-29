@@ -68,9 +68,19 @@
         android:layout_marginTop="@dimen/add_item_top_margin_between_lbl_txt"
         />
 
+    <TextView
+        android:id="@+id/add_item_lbl_category"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="@string/category_lbl"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/add_item_retail_price_txtbox"
+        android:paddingLeft="@dimen/add_item_padding_sides"
+        android:layout_height="wrap_content" />
+
     <Spinner
         android:id="@+id/add_item_categories_dropdown"
-        android:layout_below="@+id/add_item_retail_price_txtbox"
+        android:layout_below="@+id/add_item_lbl_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/add_item_padding_sides"

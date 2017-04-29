@@ -28,7 +28,6 @@ import com.main.junaidstore.interfaces.AsyncCallback;
 import com.main.junaidstore.libraries.GeneralFunctions;
 import com.main.junaidstore.libraries.ImageUploader;
 import com.main.junaidstore.libraries.NetworkInterface;
-import com.main.junaidstore.models.*;
 import com.main.junaidstore.models.Categories;
 
 import org.parceler.Parcels;
@@ -249,6 +248,10 @@ public class AddNewItem extends AppCompatActivity implements AsyncCallback{
             if(response.getType().equals("200")){
                 Toast.makeText(this, "Uploaded Successfully !!!", Toast.LENGTH_SHORT).show();
                 add_item_submit_btn.setEnabled(true);
+                add_item_real_price.setText("");
+                add_item_retail_price_txtbox.setText("");
+                add_item_img.setVisibility(View.INVISIBLE);
+                add_item_img_upload_box.setVisibility(View.VISIBLE);
             }
         }
         else if(CODE_GET_POSTING_PAGE_CATEGORIES == resultCode){

@@ -36,6 +36,9 @@ public interface INetworkInterface {
     @GET("_category/get_categories")
     Call<com.main.junaidstore.models.Response> getCategories(@Query("userid") String userid,
                                    @Query("access_token") String access_token);
+    @GET("_post/get_dates")
+    Call<com.main.junaidstore.models.Response> getPostDates(@Query("userid") String userid,
+                                                             @Query("access_token") String access_token);
 
     @Multipart
     @POST("_post/insert_post")

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.widget.Toast;
 
 import com.main.junaidstore.activities.AddNewItem;
+import com.main.junaidstore.activities.MainActivity;
 import com.main.junaidstore.interfaces.INetworkInterface;
 import com.main.junaidstore.models.Categories;
 import com.main.junaidstore.models.Users;
@@ -43,9 +44,34 @@ public class NetworkInterface {
                     if(callbackCode == AddNewItem.CODE_GET_POSTING_PAGE_CATEGORIES){
                         ((com.main.junaidstore.activities.AddNewItem)NetworkInterface.this.activity).AsyncCallback(callbackCode, Parcels.wrap(req));
                     }
+                    else if(callbackCode == MainActivity.CODE_POST_CATEGORIES){
+                        ((com.main.junaidstore.activities.MainActivity)NetworkInterface.this.activity).AsyncCallback(callbackCode, Parcels.wrap(req));
+                    }
                     else{
                         ((com.main.junaidstore.activities.Categories)NetworkInterface.this.activity).AsyncCallback(callbackCode, Parcels.wrap(req));
                     }
+                }
+                else{
+                    Toast.makeText(activity,"Something went wrong, please try later.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<com.main.junaidstore.models.Response> call, Throwable t) {
+            }
+        });
+    }
+    public void getPostDates(String userid,String access_token,final int callbackCode){
+        Call<com.main.junaidstore.models.Response> call = networkInterface.getPostDates(userid,access_token);
+        call.enqueue(new Callback<com.main.junaidstore.models.Response>() {
+
+            @Override
+            public void onResponse(Call<com.main.junaidstore.models.Response> call, Response<com.main.junaidstore.models.Response> response) {
+                int code = response.code();
+
+                if(code == 200){
+                    com.main.junaidstore.models.Response req = response.body();
+                    ((com.main.junaidstore.activities.MainActivity)NetworkInterface.this.activity).AsyncCallback(callbackCode, Parcels.wrap(req));
                 }
                 else{
                     Toast.makeText(activity,"Something went wrong, please try later.", Toast.LENGTH_SHORT).show();

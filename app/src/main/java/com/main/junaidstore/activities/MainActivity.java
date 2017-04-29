@@ -1,17 +1,23 @@
 package com.main.junaidstore.activities;
 
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.main.junaidstore.R;
+import com.main.junaidstore.adapters.CategoriesAdapter;
 import com.main.junaidstore.adapters.MainGridAdapter;
+import com.main.junaidstore.interfaces.AsyncCallback;
+import com.main.junaidstore.libraries.GeneralFunctions;
+import com.main.junaidstore.libraries.NetworkInterface;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -21,10 +27,15 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import org.parceler.Parcels;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements AsyncCallback {
 
     @BindView(R.id.activity_main) RelativeLayout main_activity_view;
     @BindView(R.id.main_image_grid) GridView image_grid;
@@ -32,16 +43,40 @@ public class MainActivity extends FragmentActivity {
     @BindView(R.id.main_header_date) Spinner main_header_date;
     @BindView(R.id.main_header_category) Spinner main_header_category;
 
+
+    public static final int CODE_POST_CATEGORIES = 291;
+    public static final int CODE_POST_DATES = 292;
+    public static final int CODE_POSTS = 293;
+    public NetworkInterface networkInterface;
+
+    public List<com.main.junaidstore.models.Categories> categoriesList;
+    public List<com.main.junaidstore.models.Posts> datesList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        networkInterface = new NetworkInterface(this);
+
         //main_header_tags.setVisibility(View.GONE);
         image_grid.setAdapter(new MainGridAdapter(getApplicationContext()));
         createDrawer();
         //startActivity(new Intent(MainActivity.this,Categories.class));
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        this.networkInterface.getCategories(GeneralFunctions.getSessionValue(this,getResources().getString(R.string.userid)),
+                GeneralFunctions.getSessionValue(this,getResources().getString(R.string.access_token)),
+                CODE_POST_CATEGORIES);
+
+        this.networkInterface.getPostDates(GeneralFunctions.getSessionValue(this,getResources().getString(R.string.userid)),
+                GeneralFunctions.getSessionValue(this,getResources().getString(R.string.access_token)),
+                CODE_POST_DATES);
+
     }
 
 
@@ -86,4 +121,48 @@ public class MainActivity extends FragmentActivity {
     }
 
 
+    @Override
+    public void AsyncCallback(int resultCode, Parcelable rf) {
+        com.main.junaidstore.models.Response response = Parcels.unwrap(rf);
+
+        if(CODE_POST_CATEGORIES == resultCode){
+            categoriesList = response.getCategories();
+            populateCategoriesDropdown(categoriesList);
+        }
+        else if(CODE_POST_DATES == resultCode){
+            datesList = response.getPosts();
+            populateDatesDropdown(datesList);
+        }
+
+    }
+
+    private void populateCategoriesDropdown(List<com.main.junaidstore.models.Categories> categories){
+
+        List<String> str = new ArrayList<>();
+
+        for(com.main.junaidstore.models.Categories cat: categoriesList){
+            str.add(cat.getCategory());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item, str);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        main_header_category.setAdapter(adapter);
+    }
+
+    private void populateDatesDropdown(List<com.main.junaidstore.models.Posts> posts){
+
+        List<String> str = new ArrayList<>();
+
+        for(com.main.junaidstore.models.Posts post: posts){
+            str.add(post.getCreatedAt());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item, str);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        main_header_date.setAdapter(adapter);
+    }
 }

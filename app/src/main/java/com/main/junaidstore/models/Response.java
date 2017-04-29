@@ -27,11 +27,11 @@ public class Response {
     private List<Categories> categories;
 
     @ParcelPropertyConverter(ParcelPostsConverter.class)
-    private  Posts posts;
+    private  List<Posts> posts;
 
     public Users getUsers(){ return this.users; }
     public List<Categories> getCategories(){ return  this.categories; }
-    public Posts getPosts(){ return this.posts; }
+    public List<Posts> getPosts(){ return this.posts; }
     public String getMessage(){ return this.message; }
     public String getType() { return this.type; }
 }

@@ -7,6 +7,7 @@
     <string name="add">Add</string>
     <string name="retail_price">Retail Price:</string>
     <string name="original_price">Original Price:</string>
+    <string name="category_lbl">Category:</string>
     <string name="cancel">Cancel</string>
     <string name="search">Search</string>
     <string name="save">Save</string>
