@@ -18,6 +18,8 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -71,6 +73,7 @@ public class AddNewItem extends AppCompatActivity implements AsyncCallback{
     private static final int SELECT_FILE = 2;
     private ProgressDialog progress;
 
+    private int imageViewRotationTapCount = 0;
     private String picturePath;
 
     public List<com.main.junaidstore.models.Categories> categoriesList;
@@ -120,9 +123,11 @@ public class AddNewItem extends AppCompatActivity implements AsyncCallback{
                     public void onClick(DialogInterface dialog, int item) {
 
                         if (items[item].equals("Take Photo")) {
+                            resetImageViewRotation();
                             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             startActivityForResult(intent, REQUEST_CAMERA);
                         } else if (items[item].equals("Choose from Library")) {
+                            resetImageViewRotation();
                             Intent intent = new Intent(
                                     Intent.ACTION_PICK,
                                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -145,10 +150,12 @@ public class AddNewItem extends AppCompatActivity implements AsyncCallback{
                             categoriesList.get(add_item_categories_dropdown.getSelectedItemPosition()).getID(),
                             GeneralFunctions.getSessionValue(AddNewItem.this,getResources().getString(R.string.userid)),
                             GeneralFunctions.getSessionValue(AddNewItem.this,getResources().getString(R.string.access_token)),
-                            AddNewItem.this
+                            AddNewItem.this,
+                            String.valueOf(imageViewRotationTapCount)
                             );
 
                     uploader.execute(picturePath);
+                    resetImageViewRotation();
                     progress.show();
                 }
             }
@@ -168,11 +175,9 @@ public class AddNewItem extends AppCompatActivity implements AsyncCallback{
             add_item_img_upload_box.setVisibility(View.INVISIBLE);
             Uri selectedImage  = imageReturnedIntent.getData();
             picturePath = getPicturePath(selectedImage);
+            Bitmap loadedBitmap = BitmapFactory.decodeFile(picturePath);
 
             if(requestCode == SELECT_FILE){
-
-
-                Bitmap loadedBitmap = BitmapFactory.decodeFile(picturePath);
 
                 Matrix matrix = new Matrix();
                 if (loadedBitmap.getWidth() >= loadedBitmap.getHeight()){
@@ -182,64 +187,96 @@ public class AddNewItem extends AppCompatActivity implements AsyncCallback{
                     matrix.setRectToRect(new RectF(0, 0, loadedBitmap.getWidth(), loadedBitmap.getHeight()), new RectF(0, 0, 300, 400), Matrix.ScaleToFit.CENTER);
                     scaledBitmap = Bitmap.createBitmap(loadedBitmap, 0, 0, loadedBitmap.getWidth(), loadedBitmap.getHeight(), matrix, true);
                 }
+
+                File file = new File(getExternalCacheDir(), "image.jpg");
+                try {
+                    FileOutputStream out = new FileOutputStream(file);
+                    scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                    out.flush();
+                    out.close();
+                } catch (Exception e) {
+                    Log.e("Image", "Convert");
+                }
             }
         else{
-
-                try{
-
-                    BitmapFactory.Options bounds = new BitmapFactory.Options();
-                    bounds.inJustDecodeBounds = true;
-                    BitmapFactory.decodeFile(picturePath, bounds);
-
-
-                    BitmapFactory.Options opts = new BitmapFactory.Options();
-                    Bitmap bm = BitmapFactory.decodeFile(picturePath, opts);
-                    ExifInterface exif = new ExifInterface(picturePath);
-                    String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
-                    int orientation = orientString != null ? Integer.parseInt(orientString) :  ExifInterface.ORIENTATION_NORMAL;
-
-                    int rotationAngle = 0;
-                    if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
-                    if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
-                    if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270;
-
-                    Matrix matrix = new Matrix();
-                    matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
-                    scaledBitmap = Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
-
+                Matrix matrix = new Matrix();
+                if (loadedBitmap.getWidth() >= loadedBitmap.getHeight()){
+                    matrix.setRectToRect(new RectF(0, 0, loadedBitmap.getWidth(), loadedBitmap.getHeight()), new RectF(0, 0, 400, 300), Matrix.ScaleToFit.CENTER);
+                    scaledBitmap = Bitmap.createBitmap(loadedBitmap, 0, 0, loadedBitmap.getWidth(), loadedBitmap.getHeight(), matrix, true);
+                } else{
+                    matrix.setRectToRect(new RectF(0, 0, loadedBitmap.getWidth(), loadedBitmap.getHeight()), new RectF(0, 0, 300, 400), Matrix.ScaleToFit.CENTER);
+                    scaledBitmap = Bitmap.createBitmap(loadedBitmap, 0, 0, loadedBitmap.getWidth(), loadedBitmap.getHeight(), matrix, true);
                 }
-                catch (IOException e){
 
-                }
-            }
-        saveToInternalStorage(scaledBitmap);
+                File file = new File(getExternalCacheDir(), "image.jpg");
+                try {
+                    FileOutputStream out = new FileOutputStream(file);
+                    scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                    out.flush();
+                    out.close();
+                } catch (Exception e) {
+                    Log.e("Image", "Convert");
+                }            }
         add_item_img.setImageBitmap(scaledBitmap);
     }
-
-    private String saveToInternalStorage(Bitmap bitmapImage){
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
-        // path to /data/data/yourapp/app_data/imageDir
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        // Create imageDir
-        File mypath=new File(directory,"image.jpg");
-
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(mypath);
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            picturePath = mypath.getPath();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return directory.getAbsolutePath();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.category_menu, menu);
+        return true;
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_name) {
+            imageViewRotationTapCount = imageViewRotationTapCount + 1;
+            add_item_img.setRotation(add_item_img.getRotation() + 90);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+    public void rotateImage(){
+        try{
+
+            BitmapFactory.Options bounds = new BitmapFactory.Options();
+            bounds.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(picturePath, bounds);
+
+
+            BitmapFactory.Options opts = new BitmapFactory.Options();
+            Bitmap bm = BitmapFactory.decodeFile(picturePath, opts);
+            ExifInterface exif = new ExifInterface(picturePath);
+            String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+            int orientation = orientString != null ? Integer.parseInt(orientString) :  ExifInterface.ORIENTATION_NORMAL;
+
+            int rotationAngle = 0;
+            if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
+            if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
+            if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270;
+
+            Matrix matrix = new Matrix();
+            matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
+            scaledBitmap = Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
+        }
+        catch (IOException e){
+
+        }
+
+    }
+
+    public void resetImageViewRotation(){
+        for(int i= imageViewRotationTapCount; i>0; i--){
+            add_item_img.setRotation(add_item_img.getRotation() - 90);
+        }
+        imageViewRotationTapCount = 0;
+    }
+
     public String getPicturePath(Uri selectedImage){
         String[] filePathColumn = { MediaStore.Images.Media.DATA };
 

@@ -70,6 +70,16 @@ public class MainGridAdapter extends BaseAdapter{
             imageView = (ImageView) gridView
                     .findViewById(R.id.grid_item_image);
 
+            if(posts.get(position).getRotation() != "0"){
+                int rotation = Integer.valueOf(posts.get(position).getRotation());
+
+                for (int i = 0; i < rotation ; i++){
+                    imageView.setRotation(imageView.getRotation() + 90);
+                }
+            }
+
+
+
             retail_price = (TextView) gridView.findViewById(R.id.grid_item_retail_price);
             original_price = (TextView) gridView.findViewById(R.id.grid_item_original_price);
             category = (TextView) gridView.findViewById(R.id.grid_item_category);

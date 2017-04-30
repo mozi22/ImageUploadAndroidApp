@@ -54,7 +54,8 @@ public interface INetworkInterface {
                            @Part("original_price") RequestBody original_price,
                            @Part("userid") RequestBody userid,
                            @Part("access_token") RequestBody access_token,
-                           @Part("categoryid") RequestBody categoryid
+                           @Part("categoryid") RequestBody categoryid,
+                           @Part("rotationCount") RequestBody imageRotationCount
                            );
 
     @FormUrlEncoded

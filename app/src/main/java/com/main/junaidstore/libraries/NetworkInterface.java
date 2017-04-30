@@ -152,9 +152,9 @@ public class NetworkInterface {
         });
     }
 
-    public void insertPost(MultipartBody.Part image, RequestBody retail_price, RequestBody original_price, RequestBody userid, RequestBody access_token, RequestBody catid, final int callbackCode){
+    public void insertPost(MultipartBody.Part image, RequestBody retail_price, RequestBody original_price, RequestBody userid, RequestBody access_token, RequestBody catid,RequestBody rotationCount, final int callbackCode){
 
-        Call<com.main.junaidstore.models.Response> call = networkInterface.insertPost(image,retail_price,original_price,userid,access_token,catid);
+        Call<com.main.junaidstore.models.Response> call = networkInterface.insertPost(image,retail_price,original_price,userid,access_token,catid,rotationCount);
         call.enqueue(new Callback<com.main.junaidstore.models.Response>() {
             @Override
             public void onResponse(Call<com.main.junaidstore.models.Response> call, Response<com.main.junaidstore.models.Response> response) {

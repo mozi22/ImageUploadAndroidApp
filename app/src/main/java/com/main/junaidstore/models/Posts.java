@@ -19,6 +19,9 @@ public class Posts {
     private String category;
     private String categoryid;
 
+    // The user can rotate image to make it straight
+    private String rotation;
+
     public String getID(){ return this.id; }
     public String getUpdatedAt(){ return this.updated_at; }
     public String getCreatedAt(){ return this.created_at; }
@@ -27,5 +30,6 @@ public class Posts {
     public String getImage(){ return this.image_path; }
     public String getCategory(){ return this.category; }
     public String getCategoryID(){ return this.categoryid; }
+    public String getRotation() { return this.rotation; }
 
 }

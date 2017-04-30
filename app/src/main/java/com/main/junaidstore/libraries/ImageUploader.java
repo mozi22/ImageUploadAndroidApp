@@ -27,17 +27,19 @@ public class ImageUploader extends AsyncTask<String,Void,String>{
     private String catid;
     private String userid;
     private String access_token;
+    private String rotationCount;
 
     private Activity activity;
 
     private NetworkInterface networkInterface;
 
-    public ImageUploader(String originalprice, String retailprice, String catid,String userid,String access_token, Activity activity){
+    public ImageUploader(String originalprice, String retailprice, String catid,String userid,String access_token, Activity activity, String rotationCount){
         this.retail_price = retailprice;
         this.original_price = originalprice;
         this.userid = userid;
         this.access_token = access_token;
         this.catid = catid;
+        this.rotationCount = rotationCount;
 
         this.activity = activity;
 
@@ -53,8 +55,9 @@ public class ImageUploader extends AsyncTask<String,Void,String>{
         RequestBody access_token = RequestBody.create(MediaType.parse("multipart/form-data"), this.access_token);
         RequestBody userid = RequestBody.create(MediaType.parse("multipart/form-data"), this.userid);
         RequestBody catid = RequestBody.create(MediaType.parse("multipart/form-data"),this.catid);
+        RequestBody rotationCount = RequestBody.create(MediaType.parse("multipart/form-data"),this.rotationCount);
 
-        this.networkInterface.insertPost(requestFile,retail_price,original_price,userid,access_token,catid,AddNewItem.CODE_INSERT_POST);
+        this.networkInterface.insertPost(requestFile,retail_price,original_price,userid,access_token,catid,rotationCount,AddNewItem.CODE_INSERT_POST);
 
         return "";
     }
