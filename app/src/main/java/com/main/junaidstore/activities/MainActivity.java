@@ -107,9 +107,9 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
             }
         });
 
-//        if(GeneralFunctions.getSessionValue(this,getResources().getString(R.string.userid)) == "1"){
+        if(GeneralFunctions.getSessionValue(this,getResources().getString(R.string.userid)).equals("1")){
             createDrawer();
-//        }
+        }
 
     }
 
@@ -267,8 +267,9 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
 
         List<String> str = new ArrayList<>();
 
-        for(com.main.junaidstore.models.Posts post: posts){
-            str.add(post.getCreatedAt());
+        for(int i=posts.size() -1 ;i>=0;i--){
+
+            str.add(posts.get(i).getCreatedAt());
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
