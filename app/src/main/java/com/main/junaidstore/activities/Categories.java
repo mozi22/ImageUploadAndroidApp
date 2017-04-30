@@ -83,7 +83,6 @@ public class Categories extends AppCompatActivity implements AsyncCallback{
     }
 
     private void showDialog(){
-
         FragmentManager fm = getSupportFragmentManager();
         AddCategoryDialog newFragment = new AddCategoryDialog();
         newFragment.show(fm,"Dialog");

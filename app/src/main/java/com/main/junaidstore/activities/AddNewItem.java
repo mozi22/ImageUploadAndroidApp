@@ -1,8 +1,6 @@
 package com.main.junaidstore.activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,10 +8,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.RectF;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -39,13 +35,8 @@ import com.main.junaidstore.models.Categories;
 import org.parceler.Parcels;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -241,34 +232,7 @@ public class AddNewItem extends AppCompatActivity implements AsyncCallback{
 
         return super.onOptionsItemSelected(item);
     }
-    public void rotateImage(){
-        try{
 
-            BitmapFactory.Options bounds = new BitmapFactory.Options();
-            bounds.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(picturePath, bounds);
-
-
-            BitmapFactory.Options opts = new BitmapFactory.Options();
-            Bitmap bm = BitmapFactory.decodeFile(picturePath, opts);
-            ExifInterface exif = new ExifInterface(picturePath);
-            String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
-            int orientation = orientString != null ? Integer.parseInt(orientString) :  ExifInterface.ORIENTATION_NORMAL;
-
-            int rotationAngle = 0;
-            if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
-            if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
-            if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270;
-
-            Matrix matrix = new Matrix();
-            matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
-            scaledBitmap = Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
-        }
-        catch (IOException e){
-
-        }
-
-    }
 
     public void resetImageViewRotation(){
         for(int i= imageViewRotationTapCount; i>0; i--){
@@ -342,8 +306,4 @@ public class AddNewItem extends AppCompatActivity implements AsyncCallback{
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         add_item_categories_dropdown.setAdapter(adapter);
     }
-
-
-
-
 }

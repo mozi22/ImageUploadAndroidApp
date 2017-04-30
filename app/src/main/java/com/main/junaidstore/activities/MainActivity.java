@@ -1,6 +1,8 @@
 package com.main.junaidstore.activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
@@ -26,6 +28,7 @@ import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
@@ -168,7 +171,7 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
                 )
                 .build();
         //Now create your drawer and pass the AccountHeader.Result
-        new DrawerBuilder()
+        Drawer result = new DrawerBuilder()
                 .withAccountHeader(headerResult)
                 .withActivity(this)
                 .withTranslucentStatusBar(false)
@@ -188,10 +191,32 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
                         else if(position == 1){
                             startActivity(new Intent(MainActivity.this,AddNewItem.class));
                         }
+                        else if(position == -1 ){
+
+                            new AlertDialog.Builder(MainActivity.this)
+                                    .setTitle("Logout")
+                                    .setMessage("Are you sure you want to logout ?")
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            GeneralFunctions.addSessionValue(MainActivity.this,getResources().getString(R.string.access_token),"");
+                                            GeneralFunctions.addSessionValue(MainActivity.this,getResources().getString(R.string.usertype),"");
+                                            GeneralFunctions.addSessionValue(MainActivity.this,getResources().getString(R.string.userid),"");
+                                            Intent intent = new Intent(MainActivity.this,login.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                                            startActivity(intent);
+                                        }})
+                                    .setNegativeButton(android.R.string.no, null).show();
+                        }
                         return false;
                     }
                 })
         .build();
+
+        result.addStickyFooterItem(new PrimaryDrawerItem().withName("Logout"));
     }
 
 

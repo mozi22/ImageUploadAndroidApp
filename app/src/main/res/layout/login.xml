@@ -23,6 +23,8 @@
 
     <EditText
         android:layout_width="match_parent"
+        android:singleLine="true"
+        android:maxLines="1"
         android:layout_height="wrap_content"
         android:id="@+id/login_txt_username"
         android:layout_centerHorizontal="true"
@@ -41,9 +43,11 @@
         android:layout_below="@+id/login_txt_username"
         />
     <EditText
+        android:singleLine="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/login_txt_password"
+        android:maxLines="1"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="@dimen/add_item_padding_sides"
         android:layout_marginRight="@dimen/add_item_padding_sides"

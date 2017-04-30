@@ -86,9 +86,9 @@ public class MainGridAdapter extends BaseAdapter{
 
             retail_price.setText("Retail Price: "+posts.get(position).getRetailPrice());
 
-//            if(GeneralFunctions.getSessionValue(activity,mContext.getResources().getString(R.string.userid)) == "1"){
+            if(GeneralFunctions.getSessionValue(activity,mContext.getResources().getString(R.string.userid)) == "1"){
                 original_price.setText("Original Price: "+posts.get(position).getOriginalPrice());
-//            }
+            }
             category.setText("Category: "+posts.get(position).getCategory());
 
 

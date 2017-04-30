@@ -39,6 +39,8 @@
         android:id="@+id/add_item_real_price_txtbox"
         android:layout_below="@+id/add_item_real_price"
         android:inputType="numberDecimal"
+        android:maxLines="1"
+        android:singleLine="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -58,6 +60,8 @@
         android:layout_height="wrap_content" />
     <EditText
         android:id="@+id/add_item_retail_price_txtbox"
+        android:maxLines="1"
+        android:singleLine="true"
         android:layout_below="@+id/add_item_lbl_retail_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
