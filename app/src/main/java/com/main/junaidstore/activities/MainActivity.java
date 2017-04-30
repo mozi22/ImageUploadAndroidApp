@@ -82,7 +82,7 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                if(initialDataLoadedCat && initialDataLoadedDates){
+                if(initialDataLoadedCat && initialDataLoadedDates && datesList.size()!=0 && categoriesList.size()!=0){
                     loadBasedOnNewCategories();
                 }
             }
@@ -96,7 +96,7 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                if(initialDataLoadedCat && initialDataLoadedDates){
+                if(initialDataLoadedCat && initialDataLoadedDates && datesList.size()!=0 && categoriesList.size()!=0){
                     loadBasedOnNewCategories();
                 }
             }
@@ -107,7 +107,7 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
             }
         });
 
-        if(GeneralFunctions.getSessionValue(this,getResources().getString(R.string.userid)).equals("2")) {
+        if(GeneralFunctions.getSessionValue(this,getResources().getString(R.string.usertype)).equals("2")) {
             createDrawerForEmployee();
         }
         else{
@@ -296,6 +296,8 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
 
             if(this.postsList.size() == 0){
                 Toast.makeText(getApplicationContext(),"No Records in this category",Toast.LENGTH_SHORT).show();
+                progress.dismiss();
+                return;
             }
 
             image_grid.setAdapter(new MainGridAdapter(getApplicationContext(),this.postsList,this));

@@ -287,6 +287,12 @@ public class AddNewItem extends AppCompatActivity implements AsyncCallback{
             }
         }
         else if(CODE_GET_POSTING_PAGE_CATEGORIES == resultCode){
+
+            if(response.getCategories().size() == 0){
+                Toast.makeText(getApplicationContext(),"Add atleast one category first",Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
             categoriesList = response.getCategories();
             populateCategoriesDropdown(categoriesList);
         }
