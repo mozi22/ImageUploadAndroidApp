@@ -44,7 +44,7 @@ public class login extends AppCompatActivity implements AsyncCallback{
         this.networkInterface = new NetworkInterface(this);
 
         if(!GeneralFunctions.getSessionValue(this,getResources().getString(R.string.access_token)).equals("")){
-            startActivity(new Intent(this,MainActivity.class));
+            gotomain();
         }
 
         login_btn_login.setOnClickListener(new View.OnClickListener() {
@@ -55,6 +55,15 @@ public class login extends AppCompatActivity implements AsyncCallback{
                 }
             }
         });
+    }
+
+    private  void gotomain(){
+
+        Intent intent = new Intent(this,MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        startActivity(intent);
     }
 
 
@@ -85,7 +94,7 @@ public class login extends AppCompatActivity implements AsyncCallback{
             GeneralFunctions.addSessionValue(login.this,getResources().getString(R.string.usertype),response.getUsers().getUserType());
             GeneralFunctions.addSessionValue(login.this,getResources().getString(R.string.userid),response.getUsers().getUserId());
 
-            startActivity(new Intent(login.this,MainActivity.class));
+            gotomain();
         }
     }
 }

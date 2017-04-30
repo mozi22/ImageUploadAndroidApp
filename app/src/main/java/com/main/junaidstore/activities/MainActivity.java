@@ -107,7 +107,10 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
             }
         });
 
-        if(GeneralFunctions.getSessionValue(this,getResources().getString(R.string.userid)).equals("1")){
+        if(GeneralFunctions.getSessionValue(this,getResources().getString(R.string.userid)).equals("2")) {
+            createDrawerForEmployee();
+        }
+        else{
             createDrawer();
         }
 
@@ -154,6 +157,59 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
                 "",
                 CODE_POSTS);
 
+    }
+    private void createDrawerForEmployee(){
+
+        AccountHeader headerResult = new AccountHeaderBuilder()
+                .withActivity(this)
+                .withHeaderBackground(R.drawable.cover)
+                .addProfiles(
+                        new ProfileDrawerItem().withName(getResources().getString(R.string.app_name)).withIcon(ContextCompat.getDrawable(getApplicationContext(),R.drawable.app_cover))
+                )
+                .build();
+        //Now create your drawer and pass the AccountHeader.Result
+        Drawer result = new DrawerBuilder()
+                .withAccountHeader(headerResult)
+                .withActivity(this)
+                .withTranslucentStatusBar(false)
+                .withActionBarDrawerToggle(true)
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        // do something with the clicked item :D
+                        if(position == 3){
+                            startActivity(new Intent(MainActivity.this,Categories.class));
+                        }
+                        else if(position == 1){
+                            startActivity(new Intent(MainActivity.this,AddNewItem.class));
+                        }
+                        else if(position == -1 ){
+
+                            new AlertDialog.Builder(MainActivity.this)
+                                    .setTitle("Logout")
+                                    .setMessage("Are you sure you want to logout ?")
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            GeneralFunctions.addSessionValue(MainActivity.this,getResources().getString(R.string.access_token),"");
+                                            GeneralFunctions.addSessionValue(MainActivity.this,getResources().getString(R.string.usertype),"");
+                                            GeneralFunctions.addSessionValue(MainActivity.this,getResources().getString(R.string.userid),"");
+
+                                            Intent intent = new Intent(MainActivity.this,login.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                                            startActivity(intent);
+                                        }})
+                                    .setNegativeButton(android.R.string.no, null).show();
+                        }
+                        return false;
+                    }
+                })
+                .build();
+
+        result.addStickyFooterItem(new PrimaryDrawerItem().withName("Logout"));
     }
 
 
@@ -203,6 +259,7 @@ public class MainActivity extends FragmentActivity implements AsyncCallback {
                                             GeneralFunctions.addSessionValue(MainActivity.this,getResources().getString(R.string.access_token),"");
                                             GeneralFunctions.addSessionValue(MainActivity.this,getResources().getString(R.string.usertype),"");
                                             GeneralFunctions.addSessionValue(MainActivity.this,getResources().getString(R.string.userid),"");
+
                                             Intent intent = new Intent(MainActivity.this,login.class);
                                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
